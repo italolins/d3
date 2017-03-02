@@ -77,8 +77,8 @@
 
     var path = d3.geoPath().projection(projection);
 
-    var populacaoScale = d3.scaleThreshold();
-    var demandaScale = d3.scaleLinear();
+    var populacaoScale = d3.scaleLog();
+    var demandaScale = d3.scaleLog();//d3.scaleLinear();
 
 		d3.queue()
 			.defer(d3.json, "data/topo_pb.json")
@@ -91,18 +91,23 @@
 			var municipios = topojson.feature(pb, pb.objects.geo_pb);
 
 			populacaoScale
-      	.domain([5000, 10000, 30000, 50000, 100000])
-				.range([d3.rgb(8, 48, 107, 0.2), d3.rgb(8, 48, 107, 0.4), d3.rgb(8, 48, 107, 0.6), d3.rgb(8, 48, 107, 0.8), d3.rgb(8, 48, 107, 1)]);
+			.domain([562,724463])
+			.range(['#cc0000','#ffcccc'])
+   //    	.domain([5000, 10000, 30000, 50000, 100000])
+			// 	.range([d3.rgb(8, 48, 107, 0.2), d3.rgb(8, 48, 107, 0.4), d3.rgb(8, 48, 107, 0.6), d3.rgb(8, 48, 107, 0.8), d3.rgb(8, 48, 107, 1)]);
 			demandaScale
-        .domain([d3.min(populacaoXdemanda, function(d) { return +d.demanda }), d3.max(populacaoXdemanda, function(d) { return +d.demanda })])
-    		.range(d3.schemeOranges[9]);
+		.domain([1, 2792])
+				.range(['#99ffcc','#006633']);
+				// .range([d3.rgb(8, 48, 107, 0.2), d3.rgb(8, 48, 107, 1)]);
+      //   .domain([d3.min(populacaoXdemanda, function(d) { return +d.demanda }), d3.max(populacaoXdemanda, function(d) { return +d.demanda })])
+    		// .range(d3.schemeOranges[9]);
 
-      svg.selectAll(".municipios")
-        .data(municipios.features)
-      .enter().append("path")
-        .attr("id", function(d) { return "populacao-"+d.properties.codigo_ibg; })
-        .attr("d", path)
-        .style("opacity", 0.5);
+      // svg.selectAll(".municipios")
+      //   .data(municipios.features)
+      // .enter().append("path")
+      //   .attr("id", function(d) { return "populacao-"+d.properties.codigo_ibg; })
+      //   .attr("d", path)
+      //   .style("opacity", 0.5);
 
       svg.selectAll(".municipios")
         .data(municipios.features)
@@ -112,8 +117,8 @@
         .style("opacity", 0.5);
 
 			for (var i = 0; i < populacaoXdemanda.length; i++) {
-				svg.select("#populacao-"+populacaoXdemanda[i].id)
-					.attr("fill", populacaoScale(+populacaoXdemanda[i].populacao));
+				// svg.select("#populacao-"+populacaoXdemanda[i].id)
+				// 	.attr("fill", populacaoScale(+populacaoXdemanda[i].populacao));
 				svg.select("#demanda-"+populacaoXdemanda[i].id)
 					.attr("fill", demandaScale(+populacaoXdemanda[i].demanda));
 			}
